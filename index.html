@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Worldbuilder (Browser-Only)</title>
+
+    <!-- MapLibre CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.17.0/dist/maplibre-gl.css"
+    />
+
+    <style>
+      :root{
+        --panel: rgba(255,255,255,.86);
+        --panel-border: rgba(0,0,0,.08);
+        --shadow: 0 10px 30px rgba(0,0,0,.10);
+        --text: #0b0f14;
+        --muted: rgba(11,15,20,.60);
+        --radius: 16px;
+        --blur: 18px;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      }
+      html, body { height: 100%; margin: 0; }
+      #app { height: 100%; width: 100%; position: relative; }
+      #map { height: 100%; width: 100%; }
+
+      .ui-floating{ position:absolute; z-index:10; }
+      .panel{
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(var(--blur));
+      }
+      .toolbar{ top: 86px; left: 16px; padding: 10px; display:flex; flex-direction:column; gap:10px; }
+      .search{ top:16px; left:16px; width:360px; padding:12px; }
+      .inspector{ top:16px; right:16px; width:320px; padding:12px; display:flex; flex-direction:column; gap:10px; }
+      .status{ left:16px; bottom:16px; padding:10px 12px; }
+
+      .row{ display:flex; gap:8px; align-items:center; }
+      .kbd { font-size: 12px; padding: 2px 6px; border-radius: 6px; border: 1px solid var(--panel-border); background: rgba(255,255,255,.7); }
+      .small{ font-size: 12px; color: var(--muted); }
+      .input{
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--panel-border);
+        background: rgba(255,255,255,.82);
+        outline: none;
+      }
+      .icon-btn{
+        width: 40px; height: 40px;
+        border-radius: 12px;
+        border: 1px solid var(--panel-border);
+        background: rgba(255,255,255,.75);
+        display:flex; align-items:center; justify-content:center;
+        cursor:pointer;
+      }
+      .icon-btn[data-active="true"]{
+        outline: 2px solid rgba(47,111,237,.25);
+        border-color: rgba(47,111,237,.35);
+        background: rgba(47,111,237,.10);
+      }
+      .hr{ height:1px; background: rgba(0,0,0,.08); margin: 10px 0; }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <div id="map"></div>
+
+      <div class="ui-floating panel search">
+        <div class="row">
+          <span style="opacity:.75">🔎</span>
+          <input id="search" class="input" placeholder="Search (UI only)" />
+          <span class="kbd">⌘K</span>
+        </div>
+        <div class="small" style="margin-top:6px">Tip: <span class="kbd">Esc</span> = Select, <span class="kbd">Del</span> = delete</div>
+      </div>
+
+      <div id="toolbar" class="ui-floating panel toolbar"></div>
+
+      <div class="ui-floating panel inspector">
+        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+          <div style="font-weight:650">Inspector</div>
+          <div id="selStatus" class="small">Nothing selected</div>
+        </div>
+        <div class="hr"></div>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button id="btnGeo" class="icon-btn" title="Export GeoJSON">⇩</button>
+          <button id="btnPng" class="icon-btn" title="Export PNG (viewport)">⤓</button>
+          <button id="btnClear" class="icon-btn" title="Clear all">⌫</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="small">Name</div>
+        <input id="propName" class="input" placeholder="e.g., Brightwater" />
+
+        <div class="small" style="margin-top:8px;">Type</div>
+        <input id="propType" class="input" placeholder="e.g., city, river" />
+
+        <div class="hr"></div>
+        <div class="small">Status</div>
+        <div id="statusText" style="font-size:13px;">Ready</div>
+      </div>
+
+      <div class="ui-floating panel status">
+        <span class="small">Features: <strong id="featCount">0</strong> • Mode: <strong id="modeText">select</strong></span>
+      </div>
+    </div>
+
+    <!-- Your app code -->
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
