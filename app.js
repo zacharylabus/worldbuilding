@@ -1,3 +1,5 @@
+import pc from "https://cdn.jsdelivr.net/npm/polygon-clipping@0.15.7/+esm";
+import { Delaunay } from "https://cdn.jsdelivr.net/npm/d3-delaunay@6.0.4/+esm";
 import maplibregl from "https://cdn.jsdelivr.net/npm/maplibre-gl@5.17.0/dist/maplibre-gl.esm.js";
 import {
   TerraDraw,
