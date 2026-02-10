@@ -59,22 +59,34 @@ const map = new maplibregl.Map({
   center: [-91.874, 42.76],
   zoom: 12
 });
+
 map.addControl(new maplibregl.NavigationControl({ showCompass: true }), "bottom-right");
 
-const adapter = new TerraDrawMapLibreGLAdapter({ map, lib: maplibregl });
+// ✅ Wait until the map style is fully loaded
+map.on("load", () => {
+  const adapter = new TerraDrawMapLibreGLAdapter({ map, lib: maplibregl });
 
-const draw = new TerraDraw({
-  adapter,
-  modes: [
-    new TerraDrawRenderMode(),
-    new TerraDrawSelectMode(),
-    new TerraDrawPointMode(),
-    new TerraDrawMarkerMode(),
-    new TerraDrawLineStringMode(),
-    new TerraDrawPolygonMode(),
-    new TerraDrawRectangleMode(),
-    new TerraDrawCircleMode(),
-    new TerraDrawFreehandMode()
+  const draw = new TerraDraw({
+    adapter,
+    modes: [
+      new TerraDrawRenderMode(),
+      new TerraDrawSelectMode(),
+      new TerraDrawPointMode(),
+      new TerraDrawMarkerMode(),
+      new TerraDrawLineStringMode(),
+      new TerraDrawPolygonMode(),
+      new TerraDrawRectangleMode(),
+      new TerraDrawCircleMode(),
+      new TerraDrawFreehandMode()
+    ]
+  });
+
+  draw.start();
+
+  // 👇 move ALL code that references `draw` (toolbar clicks, draw.on(...), exports, autosave)
+  // inside this block, so draw is defined and ready.
+});
+
   ]
 });
 
